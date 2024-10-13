@@ -16,7 +16,7 @@ namespace MyDemoApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<short>(type: "smallint", nullable: false),
+                    Name = table.Column<short>(type: "varchar(100)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>

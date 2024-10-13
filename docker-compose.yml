@@ -1,0 +1,46 @@
+ 
+name: highcontainercluster
+services: 
+#===============================================
+  myminapi:
+    container_name: myminapi
+    image: dockeredapi:latest
+    build:
+      context: ./MyDemoApi
+      dockerfile: MyDemoApi/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=MyDevelopment
+    ports:
+      - 7077:8080
+    depends_on:
+      - SqlServerDb    
+    networks:
+      - myproductnetwork
+    restart: on-failure
+#=============================================
+  SqlServerDb:
+    # container_name: mySQLSrv1
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    restart: unless-stopped
+
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=@pnaPwd1
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - volsql2019:/var/opt/mssql
+    networks:
+    - myproductnetwork
+
+# Define volumes for persistence
+volumes:
+  volsql2019:
+     name: volsql2019
+  
+# Define custom network
+networks:
+  myproductnetwork:
+ 
+ 

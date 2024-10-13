@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
+//using Microsoft.Extensions.Caching.Distributed;
 using MyDemoApi.Contracts;
 using MyDemoApi.DataBase;
 using MyDemoApi.Entities;
@@ -41,11 +41,12 @@ public static class ProductEndpoints
         .WithName("AddProduct")
         .WithOpenApi();
 
-        group.MapGet("/", async Task<Results<Ok<List<Product>>, NoContent>> (myDBContext db, IDistributedCache cache) =>
+        group.MapGet("/", async Task<Results<Ok<List<Product>>, NoContent>> (myDBContext db /*, IDistributedCache cache*/) =>
                 {
+
                     List<Product> products = null;
 
-                    var cacheKey = $"allproducts";
+                    /*var cacheKey = $"allproducts";
                     try
                     {
                         var Cachedproducts = await cache.GetStringAsync(cacheKey);
@@ -60,18 +61,18 @@ public static class ProductEndpoints
                         //do something more useful
                         products = null;
                         cacheServerIsAccessiable = false;
-                    }
+                    }*/
 
                     if (products is null)
                     {
                         products = await db.Products.ToListAsync();
-                        if (cacheServerIsAccessiable)
+                        /*if (cacheServerIsAccessiable)
                             await cache.SetStringAsync(cacheKey,
-                                         JsonSerializer.Serialize(products), CacheOptions.DefaultExpiration);
+                                         JsonSerializer.Serialize(products), CacheOptions.DefaultExpiration);*/
                     }
 
                     return products is null ? TypedResults.NoContent() : TypedResults.Ok(products);
-                    // return TypedResults.Ok(await db.Products.ToListAsync());
+
                 })
                 .WithName("GetAllProducts")
                 .WithOpenApi();

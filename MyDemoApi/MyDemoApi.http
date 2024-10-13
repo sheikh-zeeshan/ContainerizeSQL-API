@@ -1,6 +1,14 @@
-@MyDemoApi_HostAddress = http://localhost:5163
+ @MyDemoApi_HostAddress = http://localhost:7077
 
-GET {{MyDemoApi_HostAddress}}/weatherforecast/
+GET http://localhost:7077/api/Product
 Accept: application/json
-
+ 
 ###
+POST {{MyDemoApi_HostAddress}}/api/Product
+Accept: application/json
+Content-Type: application/json
+
+{
+  "Name": "Product 1",
+  "Price": 100
+}

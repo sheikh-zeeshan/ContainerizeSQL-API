@@ -13,14 +13,20 @@ public static class MigrationExtensions
 
             using (myDBContext dbContext = scope.ServiceProvider.GetRequiredService<myDBContext>())
             {
+                try
+                {
+                    if (!dbContext.Database.CanConnect())
+                        dbContext.Database.EnsureCreated();
 
-                if (!dbContext.Database.CanConnect())
-                    dbContext.Database.EnsureCreated();
+                    var pendingMigrations = dbContext.Database.GetPendingMigrations();
 
-                var pendingMigrations = dbContext.Database.GetPendingMigrations();
-
-                if (pendingMigrations.Any())
-                    dbContext.Database.Migrate();
+                    if (pendingMigrations.Any())
+                        dbContext.Database.Migrate();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
     }
